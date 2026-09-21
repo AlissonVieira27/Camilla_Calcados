@@ -1,0 +1,17 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Criar conta — EduMap{% endblock %}{% block body_class %}auth-page{% endblock %}
+{% block layout %}
+<main class="auth-layout">
+  <section class="auth-visual"><a href="{% url 'home' %}"><img class="auth-logo" src="{% static 'css/logo_edumap.png' %}" alt="EduMap"></a><img class="study-art" src="{% static 'css/study-illustration.png' %}?v=2" alt="Estudantes usando livros e computadores"></section>
+  <section class="auth-panel"><div class="auth-card register-card">
+    <h1>Crie sua conta</h1><p class="auth-subtitle">Preencha os dados abaixo para começar</p>
+    <form method="post" class="auth-form">{% csrf_token %}
+      <div class="field"><label for="id_username">Nome de usuário</label>{{ form.username }}{% for error in form.username.errors %}<small class="error-text">{{ error }}</small>{% endfor %}</div>
+      <div class="field"><label for="id_password1">Senha</label>{{ form.password1 }}{% for error in form.password1.errors %}<small class="error-text">{{ error }}</small>{% endfor %}</div>
+      <div class="field"><label for="id_password2">Confirmar senha</label>{{ form.password2 }}{% for error in form.password2.errors %}<small class="error-text">{{ error }}</small>{% endfor %}</div>
+      <label class="check-row terms"><input type="checkbox" required><span>Concordo com os <a href="{% url 'termos' %}">Termos de Uso</a> e a <a href="{% url 'privacidade' %}">Política de Privacidade</a></span></label>
+      <button type="submit" class="btn-primary btn-block">Criar conta</button>
+    </form><p class="auth-footer">Já tem uma conta? <a href="{% url 'login' %}">Entrar</a></p>
+  </div></section>
+</main>
+{% endblock %}

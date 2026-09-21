@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% block title %}Bibliotecas por região — EduMap{% endblock %}
+{% block content %}<section class="library-page">
+  <form class="search-bar" method="get" role="search"><span>⌕</span><input type="search" name="q" value="{{ busca }}" placeholder="Pesquise aqui" aria-label="Pesquisar biblioteca"><button type="submit">Pesquisar</button></form>
+  <header class="page-header"><h1>Filtrar por Região Administrativa</h1></header>
+  <div class="filters"><a class="filter-btn {% if not regiao %}active{% endif %}" href="?{% if busca %}q={{ busca|urlencode }}{% endif %}">Todas</a>{% for item in regioes %}<a class="filter-btn {% if regiao == item %}active{% endif %}" href="?regiao={{ item|urlencode }}{% if busca %}&q={{ busca|urlencode }}{% endif %}">{{ item }}</a>{% endfor %}</div>
+  <div class="grid-bibliotecas">{% for bib in bibliotecas %}<article class="card-biblioteca">
+    {% if bib.imagem %}<img src="{{ bib.imagem.url }}" alt="{{ bib.nome }}" class="card-img">{% else %}<div class="card-img-placeholder"><span>▧</span><small>Adicione uma foto</small></div>{% endif %}
+    <div class="card-body"><div class="card-title-row"><h2>{{ bib.nome }}</h2><form method="post" action="{% url 'alternar_favorito' bib.id %}">{% csrf_token %}<input type="hidden" name="next" value="listar_bibliotecas"><button class="favorite {% if bib.id in favoritos %}saved{% endif %}" type="submit" aria-label="Salvar {{ bib.nome }}">{% if bib.id in favoritos %}♥{% else %}♡{% endif %}</button></form></div>
+    <p class="regiao"><span>⌖</span>{{ bib.regiao_administrativa }}</p>{% if bib.endereco %}<p class="endereco">{{ bib.endereco }}</p>{% endif %}{% if bib.descricao %}<p class="descricao">{{ bib.descricao|truncatechars:95 }}</p>{% endif %}{% if bib.possui_internet %}<span class="amenity">⌁ Wi-Fi</span>{% endif %}
+    {% if user.is_authenticated %}<div class="card-actions"><a href="{% url 'editar_biblioteca' bib.id %}">Editar</a><a class="delete-link" href="{% url 'deletar_biblioteca' bib.id %}">Excluir</a></div>{% endif %}</div>
+  </article>{% empty %}<div class="empty-state"><span>▤</span><h2>Nenhuma biblioteca encontrada</h2><p>Cadastre uma biblioteca ou altere os filtros da busca.</p></div>{% endfor %}</div>
+  {% if user.is_authenticated %}<a href="{% url 'criar_biblioteca' %}" class="btn-floating"><strong>＋</strong><span>Adicionar biblioteca</span></a>{% endif %}
+</section>{% endblock %}

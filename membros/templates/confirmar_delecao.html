@@ -1,0 +1,2 @@
+{% extends 'base.html' %}{% block title %}Excluir biblioteca — EduMap{% endblock %}
+{% block content %}<section class="confirm-card"><div class="danger-icon"><i class="fa-regular fa-trash-can"></i></div><h1>Excluir biblioteca?</h1><p>Tem certeza que deseja excluir <strong>{{ biblioteca.nome }}</strong>? Esta ação não poderá ser desfeita.</p><form method="post">{% csrf_token %}<a href="{% url 'listar_bibliotecas' %}" class="btn-secondary">Cancelar</a><button type="submit" class="btn-danger">Sim, excluir</button></form></section>{% endblock %}

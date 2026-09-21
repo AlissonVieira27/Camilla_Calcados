@@ -1,0 +1,19 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Entrar — EduMap{% endblock %}{% block body_class %}auth-page{% endblock %}
+{% block layout %}
+<main class="auth-layout">
+  <section class="auth-visual"><a href="{% url 'home' %}"><img class="auth-logo" src="{% static 'css/logo_edumap.png' %}" alt="EduMap"></a><img class="study-art" src="{% static 'css/study-illustration.png' %}?v=2" alt="Estudantes usando livros e computadores"></section>
+  <section class="auth-panel"><div class="auth-card">
+    <h1>Bem-vindo de volta</h1><p class="auth-subtitle">Entre na sua conta para continuar</p>
+    {% if form.non_field_errors %}<div class="form-error">Usuário ou senha inválidos. Tente novamente.</div>{% endif %}
+    <form method="post" class="auth-form">{% csrf_token %}
+      <div class="field"><label for="id_username">Usuário</label>{{ form.username }}</div>
+      <div class="field"><div class="label-row"><label for="id_password">Senha</label><a href="{% url 'password_reset' %}">Esqueci minha senha</a></div>{{ form.password }}</div>
+      <label class="check-row"><input type="checkbox" name="remember"><span>Lembrar senha</span></label>
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}<button type="submit" class="btn-primary btn-block">Entrar</button>
+    </form>
+    <p class="auth-footer">Não tem uma conta? <a href="{% url 'cadastro' %}">Cadastre-se aqui</a></p>
+    <div class="legal-links"><a href="{% url 'ajuda' %}">Suporte</a><a href="{% url 'termos' %}">Termos</a><a href="{% url 'privacidade' %}">Privacidade</a></div>
+  </div></section>
+</main>
+{% endblock %}

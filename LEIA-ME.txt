@@ -1,0 +1,16 @@
+EDUMAP — COMO EXECUTAR
+
+1. Abra a pasta Camilla_Calçados no VS Code.
+2. Ative seu ambiente virtual.
+3. Instale as dependências:
+   python -m pip install -r requirements.txt
+4. Atualize o banco de dados:
+   python manage.py migrate
+5. Inicie o projeto:
+   python manage.py runserver
+6. Abra http://127.0.0.1:8000/
+
+Se o navegador mostrar uma versão antiga, pressione Ctrl + F5 para limpar o cache.
+
+Observação: o acesso com Google foi removido porque exige credenciais próprias do
+Google OAuth. Login, cadastro, logout e recuperação de senha do Django estão ativos.
