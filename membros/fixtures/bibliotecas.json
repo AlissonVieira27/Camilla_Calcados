@@ -3,12 +3,12 @@
   "model": "membros.biblioteca",
   "pk": 2,
   "fields": {
-    "nome": "Biblioteca Nacional de Brasília",
+    "nome": "Biblioteca Nacional de BrasÃ­lia",
     "regiao_administrativa": "Plano Piloto",
-    "endereco": "Setor Cultural Sul, Lote 2, Brasília - DF, CEP 70070-150",
-    "horario_funcionamento": "Segunda a sexta, das 8h às 22h; sábados e domingos, das 8h às 14h",
+    "endereco": "Setor Cultural Sul, Lote 2, BrasÃ­lia - DF, CEP 70070-150",
+    "horario_funcionamento": "Segunda a sexta, das 8h Ã s 22h; sÃ¡bados e domingos, das 8h Ã s 14h",
     "link_mapa": "https://www.google.com/maps/search/?api=1&query=Biblioteca+Nacional+de+Brasilia",
-    "descricao": "Biblioteca pública localizada no Complexo Cultural da República, com espaços para leitura e estudo disponíveis à comunidade.",
+    "descricao": "Biblioteca pÃºblica localizada no Complexo Cultural da RepÃºblica, com espaÃ§os para leitura e estudo disponÃ­veis Ã  comunidade.",
     "imagem": "bibliotecas/biblioteca_nacional.jpg",
     "possui_internet": true
   }
@@ -19,10 +19,10 @@
   "fields": {
     "nome": "Biblioteca Central da UnB",
     "regiao_administrativa": "Plano Piloto",
-    "endereco": "Campus Universitário Darcy Ribeiro, Brasília - DF, CEP 70910-900",
-    "horario_funcionamento": "De segunda-feira, às 0h, até sexta-feira, às 23h45; sábados, domingos e feriados, das 7h às 19h",
+    "endereco": "Campus UniversitÃ¡rio Darcy Ribeiro, BrasÃ­lia - DF, CEP 70910-900",
+    "horario_funcionamento": "De segunda-feira, Ã s 0h, atÃ© sexta-feira, Ã s 23h45; sÃ¡bados, domingos e feriados, das 7h Ã s 19h",
     "link_mapa": "https://www.google.com/maps/search/?api=1&query=Biblioteca+Central+UnB",
-    "descricao": "Biblioteca Central da Universidade de Brasília, com espaços de estudo, acervo acadêmico e serviços disponíveis para a comunidade.",
+    "descricao": "Biblioteca Central da Universidade de BrasÃ­lia, com espaÃ§os de estudo, acervo acadÃªmico e serviÃ§os disponÃ­veis para a comunidade.",
     "imagem": "bibliotecas/biblioteca_unb.jpg",
     "possui_internet": true
   }
