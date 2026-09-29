@@ -22,3 +22,6 @@ media/
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+# Arquivos estáticos gerados no deploy
+staticfiles/
