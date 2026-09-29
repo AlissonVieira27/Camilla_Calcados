@@ -1,10 +1,31 @@
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render
+)
+
 from django.contrib import messages
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+
 from django.db.models import Q
-from .forms import BibliotecaForm
-from .models import Biblioteca
+
+from django.contrib.sessions.models import Session
+
+from django.utils import timezone
+
+from django.views.decorators.http import require_POST
+
+from .forms import (
+    BibliotecaForm,
+    ConfiguracoesForm
+)
+
+from .models import (
+    Biblioteca,
+    ConfiguracaoUsuario
+)
 
 def cadastro(request):
     if request.method == 'POST':
@@ -72,8 +93,189 @@ def salvos(request):
 def perfil(request):
     return render(request, 'perfil.html')
 
+@login_required
 def configuracoes(request):
-    return render(request, 'configuracoes.html')
+
+    configuracao, _ = (
+        ConfiguracaoUsuario.objects.get_or_create(
+            user=request.user,
+            defaults={
+                'display_name': (
+                    request.user.first_name
+                    or request.user.username
+                )
+            }
+        )
+    )
+
+    if request.method == 'POST':
+
+        form = ConfiguracoesForm(
+            request.POST,
+            request.FILES,
+            instance=configuracao,
+            user=request.user
+        )
+
+        if form.is_valid():
+
+            configuracao = form.save(
+                commit=False
+            )
+
+            nome_completo = (
+                form.cleaned_data[
+                    'nome_completo'
+                ].strip()
+            )
+
+            partes = nome_completo.split()
+
+            if partes:
+
+                request.user.first_name = partes[0]
+
+                request.user.last_name = (
+                    ' '.join(partes[1:])
+                )
+
+            else:
+
+                request.user.first_name = ''
+                request.user.last_name = ''
+
+            request.user.email = (
+                form.cleaned_data['email']
+            )
+
+            request.user.save(
+                update_fields=[
+                    'first_name',
+                    'last_name',
+                    'email'
+                ]
+            )
+
+            configuracao.user = request.user
+            configuracao.save()
+
+            messages.success(
+                request,
+                'Suas configurações foram salvas com sucesso.'
+            )
+
+            return redirect('configuracoes')
+
+    else:
+
+        form = ConfiguracoesForm(
+            instance=configuracao,
+            user=request.user
+        )
+
+    sessoes = _obter_sessoes_usuario(
+        request.user,
+        request.session.session_key
+    )
+
+    return render(
+        request,
+        'configuracoes.html',
+        {
+            'form': form,
+            'perfil_config': configuracao,
+            'sessoes': sessoes,
+        }
+    )
+
+
+def _obter_sessoes_usuario(
+    user,
+    sessao_atual
+):
+
+    sessoes = []
+
+    sessoes_django = Session.objects.filter(
+        expire_date__gte=timezone.now()
+    ).order_by('-expire_date')
+
+    for sessao in sessoes_django:
+
+        dados = sessao.get_decoded()
+
+        if str(
+            dados.get('_auth_user_id')
+        ) != str(user.pk):
+            continue
+
+        sessoes.append({
+            'key': sessao.session_key,
+
+            'current':
+                sessao.session_key == sessao_atual,
+
+            'expires':
+                sessao.expire_date,
+        })
+
+    return sessoes
+
+
+@login_required
+@require_POST
+def encerrar_sessao(request):
+
+    session_key = request.POST.get(
+        'session_key'
+    )
+
+    if not session_key:
+        return redirect('configuracoes')
+
+    if session_key == request.session.session_key:
+
+        messages.error(
+            request,
+            'A sessão atual não pode ser encerrada por aqui.'
+        )
+
+        return redirect('configuracoes')
+
+    sessao = Session.objects.filter(
+        session_key=session_key,
+        expire_date__gte=timezone.now()
+    ).first()
+
+    if sessao:
+
+        dados = sessao.get_decoded()
+
+        if str(
+            dados.get('_auth_user_id')
+        ) == str(request.user.pk):
+
+            sessao.delete()
+
+    messages.success(
+        request,
+        'Sessão encerrada com sucesso.'
+    )
+
+    return redirect('configuracoes')
+
+
+@login_required
+@require_POST
+def excluir_conta(request):
+
+    usuario = request.user
+
+    logout(request)
+
+    usuario.delete()
+
+    return redirect('home')
 
 def ajuda(request):
     return render(request, 'ajuda.html')

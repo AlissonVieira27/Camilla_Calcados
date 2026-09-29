@@ -7,3 +7,495 @@
 /* Formulários e páginas */.form-container,.info-card,.confirm-card{max-width:720px;margin:auto;padding:36px 42px;border-radius:12px;background:#fff;box-shadow:var(--shadow)}.form-heading{display:flex;align-items:flex-start;gap:17px;margin-bottom:28px}.form-heading>a{color:var(--blue);text-decoration:none}.form-heading h1,.info-card h1{font-size:1.42rem}.form-heading p,.info-card>.subtitle{margin-top:6px;color:var(--muted);font-size:.82rem}.styled-form p{margin-bottom:17px}.styled-form label{display:block;margin-bottom:7px;font-size:.78rem;font-weight:600}.styled-form input:not([type=checkbox]),.styled-form textarea,.styled-form select{width:100%;padding:11px;border:1px solid #dce3ec;border-radius:8px;background:#f8fafc;outline:0}.styled-form input:focus,.styled-form textarea:focus{border-color:var(--blue)}.styled-form input[type=checkbox]{accent-color:var(--blue)}.form-actions{display:flex;justify-content:flex-end;gap:11px;margin-top:26px}.confirm-card{text-align:center}.danger-icon{display:grid;place-items:center;width:68px;height:68px;margin:0 auto 18px;border-radius:50%;background:#fff0f0;color:var(--danger);font-size:1.7rem}.confirm-card h1{font-size:1.35rem}.confirm-card p{margin:14px 0 26px;color:var(--muted);line-height:1.6}.confirm-card form{display:flex;justify-content:center;gap:11px}.info-list{display:grid;gap:13px;margin-top:26px}.info-row{padding:15px;border-radius:8px;background:#f7f9fc}.info-row h2{font-size:.9rem}.info-row p{margin-top:5px;color:var(--muted);font-size:.78rem;line-height:1.5}.info-row a{color:var(--blue)}.profile-grid{display:grid;grid-template-columns:auto 1fr;gap:12px 20px;margin-top:26px}.profile-grid dt{color:var(--muted);font-size:.78rem}.profile-grid dd{font-size:.82rem}.switch-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line)}.switch-row span{font-size:.82rem}.switch-row input{accent-color:var(--blue)}
 @media(max-width:900px){.auth-layout{grid-template-columns:1fr}.auth-visual{min-height:275px;padding:25px}.auth-logo{width:205px}.study-art{width:230px;max-height:170px}.app-header{height:86px}.app-shell{min-height:calc(100vh - 86px)}.sidebar{position:fixed;z-index:30;top:86px;bottom:0;left:0;transform:translateX(-105%);transition:.25s;box-shadow:var(--shadow)}.sidebar.open{transform:none}.sidebar.open+.sidebar-overlay{display:block;position:fixed;z-index:29;inset:86px 0 0;border:0;background:rgba(20,35,55,.25)}.content{padding:35px 24px}.grid-bibliotecas{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.splash-nav{top:2%;right:3%}.splash-brand{gap:38px}.auth-panel{padding:18px}.auth-card{padding:31px 24px;box-shadow:none}.grid-bibliotecas{grid-template-columns:1fr}.header-brand img{width:142px}.account-menu>span:not(.avatar){display:none}.search-bar button{display:none}.filter-btn{min-width:auto}.btn-floating{width:50px;height:50px;padding:0;justify-content:center}.btn-floating span{display:none}.form-container,.info-card,.confirm-card{padding:27px 20px}.form-actions,.confirm-card form{flex-direction:column-reverse}.form-actions>*,.confirm-card form>*{width:100%}.profile-grid{grid-template-columns:1fr}.profile-grid dt{margin-top:5px}}
+/* =========================================================
+   CONFIGURAÇÕES GLOBAIS DO USUÁRIO
+   ========================================================= */
+
+
+/* ---------- TAMANHO DA FONTE ---------- */
+
+html[data-font-size="xxsmall"] {
+    font-size: 12px;
+}
+
+html[data-font-size="xsmall"] {
+    font-size: 13.6px;
+}
+
+html[data-font-size="small"] {
+    font-size: 14.72px;
+}
+
+html[data-font-size="normal"] {
+    font-size: 16px;
+}
+
+html[data-font-size="large"] {
+    font-size: 17.92px;
+}
+
+html[data-font-size="xlarge"] {
+    font-size: 20px;
+}
+
+html[data-font-size="xxlarge"] {
+    font-size: 22.4px;
+}
+
+html[data-font-size="xxxlarge"] {
+    font-size: 25.6px;
+}
+
+
+/* ---------- TEMA ESCURO ---------- */
+
+html[data-theme="dark"] body,
+html[data-resolved-theme="dark"] body {
+    background: #101318;
+    color: #f3f4f6;
+}
+
+html[data-theme="dark"] .app-header,
+html[data-resolved-theme="dark"] .app-header {
+    background: #17233d;
+}
+
+html[data-theme="dark"] .sidebar,
+html[data-resolved-theme="dark"] .sidebar {
+    background: #151a22;
+    border-color: #303744;
+}
+
+html[data-theme="dark"] .content,
+html[data-resolved-theme="dark"] .content {
+    background: #101318;
+}
+
+html[data-theme="dark"] .card-biblioteca,
+html[data-resolved-theme="dark"] .card-biblioteca,
+
+html[data-theme="dark"] .form-container,
+html[data-resolved-theme="dark"] .form-container,
+
+html[data-theme="dark"] .info-card,
+html[data-resolved-theme="dark"] .info-card,
+
+html[data-theme="dark"] .confirm-card,
+html[data-resolved-theme="dark"] .confirm-card {
+    background: #191e27;
+    border-color: #363d49;
+    color: #f3f4f6;
+}
+
+html[data-theme="dark"] .nav-item {
+    color: #c8d0dc;
+}
+
+html[data-theme="dark"] .nav-item:hover,
+html[data-theme="dark"] .nav-item.active {
+    background: #24344f;
+    color: #75adf5;
+}
+
+html[data-theme="dark"] .search-bar,
+html[data-resolved-theme="dark"] .search-bar {
+    background: #191e27;
+    border-color: #3a424f;
+}
+
+html[data-theme="dark"] .search-bar input,
+html[data-resolved-theme="dark"] .search-bar input {
+    background: transparent;
+    color: #fff;
+}
+
+html[data-theme="dark"] .info-row,
+html[data-resolved-theme="dark"] .info-row {
+    background: #202631;
+}
+
+html[data-theme="dark"] .styled-form input:not([type=checkbox]),
+html[data-resolved-theme="dark"] .styled-form input:not([type=checkbox]),
+
+html[data-theme="dark"] .styled-form textarea,
+html[data-resolved-theme="dark"] .styled-form textarea,
+
+html[data-theme="dark"] .styled-form select,
+html[data-resolved-theme="dark"] .styled-form select {
+    background: #202631;
+    border-color: #414a59;
+    color: #fff;
+}
+
+html[data-theme="dark"] .auth-panel {
+    background: #101318;
+}
+
+html[data-theme="dark"] .auth-card {
+    background: #191e27;
+    color: #f3f4f6;
+}
+
+
+/* ---------- ALTO CONTRASTE ---------- */
+
+html[data-contrast="high"] {
+    --line: #000;
+    --muted: #333;
+}
+
+html[data-contrast="high"] body {
+    color: #000;
+}
+
+html[data-contrast="high"] .app-header,
+html[data-contrast="high"] .sidebar,
+html[data-contrast="high"] .card-biblioteca,
+html[data-contrast="high"] .info-card,
+html[data-contrast="high"] .form-container,
+html[data-contrast="high"] .confirm-card {
+    border-color: #000;
+}
+
+html[data-contrast="high"] .nav-item,
+html[data-contrast="high"] .filter-btn,
+html[data-contrast="high"] button,
+html[data-contrast="high"] input,
+html[data-contrast="high"] select,
+html[data-contrast="high"] textarea {
+    outline-color: #000;
+}
+
+html[data-contrast="high"] a {
+    text-decoration-thickness: 2px;
+}
+
+
+/* ---------- FOTO DO HEADER ---------- */
+
+.avatar-image {
+    object-fit: cover;
+    object-position: center;
+}
+
+
+/* ---------- MENU DO USUÁRIO ---------- */
+
+.account-menu {
+    position: relative;
+}
+
+.account-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.account-arrow {
+    font-size: .8rem;
+}
+
+.account-dropdown {
+    position: absolute;
+    z-index: 100;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 160px;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #fff;
+    box-shadow: var(--shadow);
+}
+
+.account-dropdown a,
+.account-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text);
+    text-decoration: none;
+    text-align: left;
+    font-size: .78rem;
+    cursor: pointer;
+}
+
+.account-dropdown a:hover,
+.account-dropdown button:hover {
+    background: var(--pale-soft);
+    color: var(--blue);
+}
+
+html[data-theme="dark"] .account-dropdown,
+html[data-resolved-theme="dark"] .account-dropdown {
+    background: #191e27;
+    border-color: #3a424f;
+}
+
+html[data-theme="dark"] .account-dropdown a,
+html[data-theme="dark"] .account-dropdown button,
+html[data-resolved-theme="dark"] .account-dropdown a,
+html[data-resolved-theme="dark"] .account-dropdown button {
+    color: #f3f4f6;
+}
+
+
+/* ---------- PÁGINA DE CONFIGURAÇÕES ---------- */
+
+.config-page {
+    background: transparent;
+}
+
+.config-page .config-input,
+.config-page .config-textarea,
+.config-page .config-select {
+    font-family: Arial, "Segoe UI", sans-serif;
+}
+
+.config-page .config-input {
+    height: 31px;
+    padding: 0 15px;
+    border: 0;
+    outline: 0;
+    border-radius: 10px;
+    background: #f0f0f0;
+    font-size: .56rem;
+}
+
+.config-page .config-textarea {
+    width: 100%;
+    height: 64px;
+    padding: 10px 15px;
+    border: 0;
+    outline: 0;
+    border-radius: 10px;
+    background: #f0f0f0;
+    resize: none;
+    font-size: .56rem;
+}
+
+.config-page .config-select {
+    width: 100%;
+    height: 31px;
+    padding: 0 15px;
+    border: 0;
+    outline: 0;
+    border-radius: 10px;
+    background: #f0f0f0;
+    font-size: .56rem;
+}
+
+
+/* ---------- CONTROLES DE TAMANHO ---------- */
+
+.font-size-options {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.font-size-option {
+    position: relative;
+}
+
+.font-size-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.font-size-option label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 53px;
+    height: 26px;
+    padding: 0 9px;
+    border-radius: 14px;
+    background: #f0f0f0;
+    color: #222;
+    font-size: 8px;
+    cursor: pointer;
+}
+
+.font-size-option input:checked + label {
+    background: #bfd6ff;
+    color: #2779d0;
+    font-weight: 700;
+}
+
+
+/* ---------- DARK CONFIGURAÇÕES ---------- */
+
+html[data-theme="dark"] .config-card,
+html[data-resolved-theme="dark"] .config-card {
+    background: #191e27;
+    border-color: #414957;
+    color: #f3f4f6;
+}
+
+html[data-theme="dark"] .config-input,
+html[data-theme="dark"] .config-textarea,
+html[data-theme="dark"] .config-select,
+html[data-resolved-theme="dark"] .config-input,
+html[data-resolved-theme="dark"] .config-textarea,
+html[data-resolved-theme="dark"] .config-select {
+    background: #252c37;
+    color: #fff;
+}
+
+html[data-theme="dark"] .font-size-option label,
+html[data-resolved-theme="dark"] .font-size-option label {
+    background: #252c37;
+    color: #fff;
+}
+
+
+/* ---------- TRANSIÇÃO ---------- */
+
+body,
+.app-header,
+.sidebar,
+.card-biblioteca,
+.info-card,
+.form-container,
+.confirm-card,
+.account-dropdown,
+.config-card {
+    transition:
+        background-color .18s ease,
+        color .18s ease,
+        border-color .18s ease;
+}
+
+/* =========================================================
+   PERFIL
+   ========================================================= */
+
+.profile-photo {
+    display: block;
+    width: 90px;
+    height: 90px;
+    margin-top: 25px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--pale);
+}
+
+/* =========================================================
+   CONFIGURAÇÕES GLOBAIS DO USUÁRIO
+   ========================================================= */
+
+
+/* -------------------------
+   TAMANHO DA FONTE
+   ------------------------- */
+
+html[data-font-size="xxsmall"] {
+    font-size: 75%;
+}
+
+html[data-font-size="xsmall"] {
+    font-size: 85%;
+}
+
+html[data-font-size="small"] {
+    font-size: 92%;
+}
+
+html[data-font-size="normal"] {
+    font-size: 100%;
+}
+
+html[data-font-size="large"] {
+    font-size: 112%;
+}
+
+html[data-font-size="xlarge"] {
+    font-size: 125%;
+}
+
+html[data-font-size="xxlarge"] {
+    font-size: 140%;
+}
+
+html[data-font-size="xxxlarge"] {
+    font-size: 160%;
+}
+
+
+/* -------------------------
+   TEMA ESCURO
+   ------------------------- */
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+html[data-theme="dark"] body {
+    background: #121212;
+    color: #eeeeee;
+}
+
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .container,
+html[data-theme="dark"] .content-card {
+    background-color: #1d1d1d;
+    color: #eeeeee;
+}
+
+
+/* -------------------------
+   ALTO CONTRASTE
+   ------------------------- */
+
+html[data-contrast="high"] body {
+    color: #000;
+}
+
+html[data-contrast="high"] a {
+    text-decoration: underline;
+}
+
+html[data-contrast="high"] button,
+html[data-contrast="high"] input,
+html[data-contrast="high"] select,
+html[data-contrast="high"] textarea {
+    border: 2px solid #000;
+}
+
+html[data-contrast="high"] * {
+    outline-color: #000;
+}
+
+html[data-theme="dark"] .config-page {
+    background: #121212;
+    color: #eeeeee;
+}
+
+html[data-theme="dark"] .config-page .config-card {
+    background: #1d1d1d;
+    color: #eeeeee;
+    border-color: #444;
+}
+
+html[data-theme="dark"] .config-page .config-input,
+html[data-theme="dark"] .config-page .config-select,
+html[data-theme="dark"] .config-page textarea {
+    background: #2a2a2a;
+    color: #eeeeee;
+}
+
+html[data-theme="dark"] .config-page .config-account-dropdown {
+    background: #1d1d1d;
+    color: #eeeeee;
+    border-color: #444;
+}

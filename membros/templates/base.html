@@ -1,42 +1,289 @@
 {% load static %}
+
 <!DOCTYPE html>
-<html lang="pt-br">
+
+<html
+    data-theme="{{ perfil_config.theme|default:'light' }}"
+    data-font-size="{{ perfil_config.font_size|default:'normal' }}"
+    data-contrast="{{ perfil_config.contrast|default:'normal' }}"
+>
+>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#dce9ff">
-  <title>{% block title %}EduMap{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3">
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#dce9ff"
+    >
+
+    <title>
+        {% block title %}
+            EduMap
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=10"
+    >
+
 </head>
-<body class="{% block body_class %}app-page{% endblock %}">
+
+
+<body
+    class="{% block body_class %}app-page{% endblock %}"
+>
+
 {% block layout %}
-  <header class="app-header">
-    <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button>
-    <a class="header-brand" href="{% url 'listar_bibliotecas' %}"><img src="{% static 'css/logo_edumap.png' %}" alt="EduMap"></a>
+
+<header class="app-header">
+
+    <button
+        class="icon-button menu-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+
+
+    <a
+        class="header-brand"
+        href="{% url 'listar_bibliotecas' %}"
+    >
+        <img
+            src="{% static 'css/logo_edumap.png' %}"
+            alt="EduMap"
+        >
+    </a>
+
+
     <div class="account-menu">
-      {% if user.is_authenticated %}<span class="avatar">{{ user.username|first|upper }}</span><span>Olá, {{ user.first_name|default:user.username }}</span>
-      {% else %}<a href="{% url 'login' %}">Entrar</a>{% endif %}
+
+        {% if user.is_authenticated %}
+
+            {% if user.configuracao and user.configuracao.photo %}
+
+                <img
+                    class="avatar avatar-image"
+                    src="{{ user.configuracao.photo.url }}"
+                    alt="Foto de perfil"
+                >
+
+            {% else %}
+
+                <span class="avatar">
+                    {{ user.username|first|upper }}
+                </span>
+
+            {% endif %}
+
+
+            <button
+                class="account-toggle"
+                type="button"
+                aria-expanded="false"
+            >
+
+                Olá,
+                {% if user.configuracao.display_name %}
+                    {{ user.configuracao.display_name }}
+                {% elif user.first_name %}
+                    {{ user.first_name }}
+                {% else %}
+                    {{ user.username }}
+                {% endif %}
+
+                <span class="account-arrow">
+                    ▾
+                </span>
+
+            </button>
+
+
+            <div
+                class="account-dropdown"
+                hidden
+            >
+
+                <a href="{% url 'perfil' %}">
+                    Perfil
+                </a>
+
+                <a href="{% url 'configuracoes' %}">
+                    Configurações
+                </a>
+
+                <form
+                    method="post"
+                    action="{% url 'logout' %}"
+                >
+                    {% csrf_token %}
+
+                    <button type="submit">
+                        Sair
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% else %}
+
+            <a href="{% url 'login' %}">
+                Entrar
+            </a>
+
+        {% endif %}
+
     </div>
-  </header>
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar">
-      <nav aria-label="Navegação principal">
-        <a class="nav-item {% if request.resolver_match.url_name == 'listar_bibliotecas' %}active{% endif %}" href="{% url 'listar_bibliotecas' %}"><span class="nav-icon">⌂</span>Bibliotecas por região</a>
-        <a class="nav-item {% if request.resolver_match.url_name == 'salvos' %}active{% endif %}" href="{% url 'salvos' %}"><span class="nav-icon">♡</span>Salvos</a>
-        {% if user.is_authenticated %}<a class="nav-item {% if request.resolver_match.url_name == 'perfil' %}active{% endif %}" href="{% url 'perfil' %}"><span class="nav-icon">♙</span>Perfil</a>{% endif %}
-        <a class="nav-item {% if request.resolver_match.url_name == 'configuracoes' %}active{% endif %}" href="{% url 'configuracoes' %}"><span class="nav-icon">⚙</span>Configurações</a>
-        <a class="nav-item {% if request.resolver_match.url_name == 'ajuda' %}active{% endif %}" href="{% url 'ajuda' %}"><span class="nav-icon">?</span>Central de ajuda</a>
-        {% if user.is_authenticated %}<form method="post" action="{% url 'logout' %}" class="logout-form">{% csrf_token %}<button class="nav-item" type="submit"><span class="nav-icon">↪</span>Sair</button></form>
-        {% else %}<a class="nav-item" href="{% url 'login' %}"><span class="nav-icon">↪</span>Entrar</a>{% endif %}
-      </nav>
+
+</header>
+
+
+<div class="app-shell">
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+        <nav aria-label="Navegação principal">
+
+            <a
+                class="nav-item {% if request.resolver_match.url_name == 'listar_bibliotecas' %}active{% endif %}"
+                href="{% url 'listar_bibliotecas' %}"
+            >
+                <span class="nav-icon">⌂</span>
+                Bibliotecas por região
+            </a>
+
+
+            <a
+                class="nav-item {% if request.resolver_match.url_name == 'salvos' %}active{% endif %}"
+                href="{% url 'salvos' %}"
+            >
+                <span class="nav-icon">♡</span>
+                Salvos
+            </a>
+
+
+            {% if user.is_authenticated %}
+
+                <a
+                    class="nav-item {% if request.resolver_match.url_name == 'perfil' %}active{% endif %}"
+                    href="{% url 'perfil' %}"
+                >
+                    <span class="nav-icon">♙</span>
+                    Perfil
+                </a>
+
+            {% endif %}
+
+
+            <a
+                class="nav-item {% if request.resolver_match.url_name == 'configuracoes' %}active{% endif %}"
+                href="{% url 'configuracoes' %}"
+            >
+                <span class="nav-icon">⚙</span>
+                Configurações
+            </a>
+
+
+            <a
+                class="nav-item {% if request.resolver_match.url_name == 'ajuda' %}active{% endif %}"
+                href="{% url 'ajuda' %}"
+            >
+                <span class="nav-icon">?</span>
+                Central de ajuda
+            </a>
+
+
+            {% if user.is_authenticated %}
+
+                <form
+                    method="post"
+                    action="{% url 'logout' %}"
+                    class="logout-form"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        class="nav-item"
+                        type="submit"
+                    >
+                        <span class="nav-icon">↪</span>
+                        Sair
+                    </button>
+
+                </form>
+
+            {% else %}
+
+                <a
+                    class="nav-item"
+                    href="{% url 'login' %}"
+                >
+                    <span class="nav-icon">↪</span>
+                    Entrar
+                </a>
+
+            {% endif %}
+
+        </nav>
+
     </aside>
-    <button class="sidebar-overlay" type="button" aria-label="Fechar menu"></button>
+
+
+    <button
+        class="sidebar-overlay"
+        type="button"
+        aria-label="Fechar menu"
+    ></button>
+
+
     <main class="content">
-      {% if messages %}<div class="messages" aria-live="polite">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
-      {% block content %}{% endblock %}
+
+        {% if messages %}
+
+            <div
+                class="messages"
+                aria-live="polite"
+            >
+
+                {% for message in messages %}
+
+                    <div class="message {{ message.tags }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        {% block content %}{% endblock %}
+
     </main>
-  </div>
+
+</div>
+
 {% endblock %}
-<script src="{% static 'css/app.js' %}?v=3"></script>
+
+
+<script src="{% static 'css/app.js' %}?v=10"></script>
+
 </body>
+
 </html>

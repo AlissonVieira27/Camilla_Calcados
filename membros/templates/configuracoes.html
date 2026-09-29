@@ -1,1 +1,1756 @@
-{% extends 'base.html' %}{% block title %}Configurações — EduMap{% endblock %}{% block content %}<section class="info-card"><h1>Configurações</h1><p class="subtitle">Personalize sua experiência.</p><label class="switch-row"><span>Receber novidades do EduMap</span><input type="checkbox"></label><label class="switch-row"><span>Mostrar somente locais com Wi-Fi</span><input type="checkbox"></label><label class="switch-row"><span>Usar visual compacto</span><input type="checkbox"></label></section>{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Perfil — EduMap{% endblock %}
+
+{% block body_class %}config-page{% endblock %}
+
+{% block content %}
+
+<style>
+
+.config-page .personal-card input[type="text"],
+.config-page .personal-card input[type="email"],
+.config-page .personal-card textarea,
+.config-page .preferences-card select {
+    font-family: Arial, "Segoe UI", sans-serif;
+}
+
+.config-page .personal-card input[type="text"],
+.config-page .personal-card input[type="email"] {
+    height: 31px;
+    padding: 0 38px;
+    border: 0;
+    outline: 0;
+    border-radius: 10px;
+    background: #f0f0f0;
+    font-size: 9px;
+}
+
+.config-page .personal-card textarea {
+    width: 100%;
+    height: 64px;
+    padding: 10px 15px;
+    border: 0;
+    outline: 0;
+    border-radius: 10px;
+    background: #f0f0f0;
+    resize: none;
+    font-size: 9px;
+}
+
+.config-page .preferences-card select {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    border-radius: 10px;
+    background: #f0f0f0;
+    height: 31px;
+    padding: 0 35px;
+    font-size: 9px;
+}
+
+
+
+.config-page {
+    --config-blue: #3b8eea;
+    --config-blue-light: #dce9ff;
+    --config-text: #171717;
+    --config-muted: #999;
+    --config-border: #a5a5a5;
+    --config-input: #f0f0f0;
+    --config-white: #fff;
+}
+
+.config-page .content {
+    width: 100%;
+    padding: 48px 6.9% 26px;
+}
+
+.config-page .sidebar {
+    position: fixed;
+    z-index: 100;
+    top: 106px;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-110%);
+    transition: transform .22s ease;
+    box-shadow: 0 12px 35px rgba(28, 57, 105, .15);
+}
+
+.config-page .sidebar.open {
+    transform: translateX(0);
+}
+
+.config-page .sidebar.open + .sidebar-overlay {
+    display: block;
+    position: fixed;
+    z-index: 99;
+    inset: 106px 0 0;
+    border: 0;
+    background: rgba(20, 35, 55, .20);
+}
+
+.config-page .app-shell {
+    min-height: calc(100vh - 106px);
+}
+
+.config-page .messages {
+    max-width: 1090px;
+    margin: 0 auto 14px;
+}
+
+.config-page .config-wrapper {
+    width: min(1090px, 100%);
+    margin: 0 auto;
+}
+
+.config-page .config-title {
+    margin-bottom: 47px;
+}
+
+.config-page .config-title h1 {
+    font-size: 17px;
+    line-height: 1.2;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.config-page .config-title p {
+    color: #aaa;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.config-page .config-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 20px 21px;
+}
+
+.config-page .config-column {
+    min-width: 0;
+}
+
+.config-page .config-section {
+    margin-bottom: 17px;
+}
+
+.config-page .config-section-title {
+    margin: 0 0 7px;
+    color: #aaa;
+    font-size: 15px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.config-page .config-card {
+    border: 1px solid #9d9d9d;
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.config-page .personal-card {
+    height: 338px;
+    padding: 18px 20px 14px;
+}
+
+.config-page .photo-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    min-height: 58px;
+    padding-bottom: 13px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.config-page .photo-info strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.config-page .photo-info small {
+    display: block;
+    font-size: 8px;
+    color: #111;
+}
+
+.config-page .photo-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.config-page .photo-preview,
+.config-page .photo-placeholder {
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex: 0 0 33px;
+}
+
+.config-page .photo-preview {
+    object-fit: cover;
+    display: block;
+}
+
+.config-page .photo-placeholder {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #d7e8ff, #f3b64c);
+    font-size: 18px;
+}
+
+.config-page .photo-button {
+    height: 30px;
+    padding: 0 17px;
+    border: 1px solid #e0e0e0;
+    border-radius: 9px;
+    background: #fff;
+    color: var(--config-blue);
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.config-page .photo-button:hover {
+    background: #f5f9ff;
+}
+
+.config-page .hidden-file {
+    display: none;
+}
+
+.config-page .field-row {
+    display: grid;
+    grid-template-columns: 163px minmax(0, 1fr);
+    align-items: center;
+    min-height: 51px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.config-page .field-row:last-child {
+    border-bottom: 0;
+}
+
+.config-page .field-description label {
+    display: block;
+    font-size: 9px;
+    margin-bottom: 3px;
+}
+
+.config-page .field-description small {
+    display: block;
+    max-width: 150px;
+    color: #aaa;
+    font-size: 7px;
+    line-height: 1.15;
+}
+
+.config-page .config-input,
+.config-page .config-textarea,
+.config-page .config-select {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    border-radius: 10px;
+    background: #f0f0f0;
+    color: #222;
+    font-size: 9px;
+}
+
+.config-page .config-input {
+    height: 31px;
+    padding: 0 38px;
+}
+
+.config-page .config-textarea {
+    height: 64px;
+    resize: none;
+    padding: 10px 15px;
+    line-height: 1.4;
+}
+
+.config-page .config-select {
+    height: 31px;
+    padding: 0 35px;
+    appearance: auto;
+}
+
+.config-page .config-input:focus,
+.config-page .config-textarea:focus,
+.config-page .config-select:focus {
+    box-shadow: 0 0 0 2px rgba(59, 142, 234, .14);
+}
+
+.config-page .bio-row {
+    min-height: 82px;
+}
+
+.config-page .preferences-card {
+    height: 190px;
+    padding: 14px 20px;
+}
+
+.config-page .preference-row {
+    display: grid;
+    grid-template-columns: 173px minmax(0, 1fr);
+    align-items: center;
+    min-height: 54px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.config-page .preference-row:last-child {
+    border-bottom: 0;
+}
+
+.config-page .preference-label strong {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.config-page .preference-label small {
+    color: #aaa;
+    font-size: 7px;
+}
+
+.config-page .account-card {
+    height: 190px;
+    padding: 14px 18px;
+}
+
+.config-page .account-row {
+    position: relative;
+    min-height: 52px;
+    padding: 11px 0;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.config-page .account-row:last-child {
+    border-bottom: 0;
+}
+
+.config-page .account-row strong {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.config-page .account-row small {
+    color: #aaa;
+    font-size: 7px;
+}
+
+.config-page .account-link {
+    position: absolute;
+    top: 22px;
+    left: 244px;
+    border: 0;
+    background: transparent;
+    color: var(--config-blue);
+    font-size: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.config-page .account-link::after {
+    content: "→";
+    margin-left: 7px;
+    font-size: 14px;
+    vertical-align: -1px;
+}
+
+.config-page .delete-button {
+    position: absolute;
+    right: 96px;
+    top: 18px;
+    height: 25px;
+    min-width: 119px;
+    border: 1px solid #ff7777;
+    border-radius: 14px;
+    background: #fff;
+    color: #ff5555;
+    font-size: 8px;
+    cursor: pointer;
+}
+
+.config-page .delete-button:hover {
+    background: #fff5f5;
+}
+
+.config-page .accessibility-card {
+    height: 190px;
+    padding: 13px 27px;
+}
+
+.config-page .access-row {
+    min-height: 50px;
+    display: grid;
+    grid-template-columns: 173px 1fr;
+    align-items: center;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.config-page .access-row:last-child {
+    border-bottom: 0;
+}
+
+.config-page .access-label strong {
+    display: block;
+    font-size: 9px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.config-page .access-label small {
+    color: #aaa;
+    font-size: 7px;
+}
+
+.config-page .choice-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.config-page .choice {
+    position: relative;
+}
+
+.config-page .choice input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.config-page .choice label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+    min-width: 57px;
+    padding: 0 12px;
+    border-radius: 15px;
+    background: #f0f0f0;
+    color: #111;
+    font-size: 8px;
+    cursor: pointer;
+}
+
+.config-page .choice input:checked + label {
+    background: #bfd6ff;
+    color: #3b8eea;
+}
+
+.config-page .font-choice {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.config-page .font-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.config-page .font-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.config-page .font-option span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 45px;
+    height: 25px;
+
+    padding: 0 7px;
+
+    border-radius: 14px;
+
+    background: #f0f0f0;
+    color: #222;
+
+    cursor: pointer;
+
+    transition:
+        background .15s ease,
+        color .15s ease;
+}
+
+.config-page .font-option span:hover {
+    background: #e5e5e5;
+}
+
+.config-page .font-option input:checked + span {
+    background: #bfd6ff;
+    color: #2779d0;
+    font-weight: 700;
+}
+
+
+/* TAMANHOS DOS EXEMPLOS */
+
+.config-page .font-xxsmall {
+    font-size: 6px;
+}
+
+.config-page .font-xsmall {
+    font-size: 7px;
+}
+
+.config-page .font-small {
+    font-size: 7.5px;
+}
+
+.config-page .font-normal {
+    font-size: 8px;
+}
+
+.config-page .font-large {
+    font-size: 9px;
+}
+
+.config-page .font-xlarge {
+    font-size: 10px;
+}
+
+.config-page .font-xxlarge {
+    font-size: 11px;
+}
+
+.config-page .font-xxxlarge {
+    font-size: 12px;
+}
+
+.config-page .font-choice label {
+    cursor: pointer;
+    font-size: 8px;
+}
+
+.config-page .font-choice input {
+    display: none;
+}
+
+.config-page .font-choice input:checked + span {
+    font-weight: 700;
+    color: #222;
+}
+
+.config-page .contrast-choice {
+    display: flex;
+    gap: 25px;
+}
+
+.config-page .radio-choice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 8px;
+    cursor: pointer;
+}
+
+.config-page .radio-choice input {
+    width: 11px;
+    height: 11px;
+    accent-color: #222;
+}
+
+.config-page .save-area {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
+
+.config-page .save-button {
+    width: 120px;
+    height: 24px;
+    border: 0;
+    border-radius: 13px;
+    background: #3b8eea;
+    color: white;
+    font-size: 8px;
+    cursor: pointer;
+}
+
+.config-page .save-button:hover {
+    background: #286fc1;
+}
+
+.config-page .field-error {
+    color: #d33;
+    font-size: 8px;
+    margin-top: 3px;
+}
+
+.config-page .account-menu {
+    cursor: pointer;
+    position: relative;
+}
+
+.config-page .account-menu::after {
+    content: "⌄";
+    margin-left: 4px;
+    font-size: 14px;
+}
+
+.config-account-dropdown {
+    position: absolute;
+    z-index: 300;
+    top: 37px;
+    right: 0;
+    width: 150px;
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 9px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,.12);
+}
+
+.config-account-dropdown a,
+.config-account-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #333;
+    text-decoration: none;
+    text-align: left;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.config-account-dropdown a:hover,
+.config-account-dropdown button:hover {
+    background: #eef5ff;
+    color: #3b8eea;
+}
+
+.config-session-modal {
+    position: fixed;
+    z-index: 500;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0,0,0,.28);
+}
+
+.config-session-modal.active {
+    display: flex;
+}
+
+.config-session-box {
+    width: min(500px, 100%);
+    max-height: 80vh;
+    overflow: auto;
+    border-radius: 12px;
+    background: #fff;
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.18);
+}
+
+.config-session-box h2 {
+    font-size: 18px;
+    margin-bottom: 17px;
+}
+
+.config-session {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 13px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.config-session-info {
+    font-size: 11px;
+    color: #555;
+}
+
+.config-session-info strong {
+    display: block;
+    color: #111;
+    margin-bottom: 3px;
+}
+
+.config-session button {
+    border: 1px solid #ff7777;
+    border-radius: 12px;
+    background: #fff;
+    color: #e44;
+    padding: 6px 10px;
+    font-size: 9px;
+    cursor: pointer;
+}
+
+.config-modal-close {
+    float: right;
+    border: 0;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.config-page.ui-dark,
+.config-page[data-theme="dark"] {
+    background: #121212;
+}
+
+.config-page[data-theme="dark"] .config-card,
+.config-page[data-theme="dark"] .config-session-box,
+.config-page[data-theme="dark"] .config-account-dropdown {
+    background: #1d1d1d;
+    color: #eee;
+}
+
+.config-page[data-theme="dark"] .config-title h1,
+.config-page[data-theme="dark"] .config-row,
+.config-page[data-theme="dark"] .field-description label {
+    color: #eee;
+}
+
+.config-page[data-contrast="high"] .config-card {
+    border: 2px solid #000;
+}
+
+
+
+@media (max-width: 850px) {
+    .config-page .content {
+        padding: 35px 22px;
+    }
+
+    .config-page .config-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .config-page .personal-card,
+    .config-page .preferences-card,
+    .config-page .account-card,
+    .config-page .accessibility-card {
+        height: auto;
+    }
+
+    .config-page .account-link {
+        left: auto;
+        right: 0;
+    }
+
+    .config-page .delete-button {
+        right: 0;
+    }
+}
+
+@media (max-width: 550px) {
+    .config-page .field-row,
+    .config-page .preference-row,
+    .config-page .access-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 12px 0;
+    }
+
+    .config-page .config-input,
+    .config-page .config-select {
+        padding-left: 15px;
+    }
+
+    .config-page .photo-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .config-page .account-link {
+        position: static;
+        display: block;
+        margin-top: 8px;
+    }
+
+    .config-page .delete-button {
+        position: static;
+        margin-top: 8px;
+    }
+}
+
+</style>
+
+
+<div class="config-wrapper">
+
+    <div class="config-title">
+        <h1>Perfil</h1>
+        <p>Gerencie suas informações pessoais e preferências de exibições</p>
+    </div>
+
+
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        id="config-form"
+    >
+        {% csrf_token %}
+
+        <div class="config-grid">
+
+            <!-- COLUNA ESQUERDA -->
+
+            <div class="config-column">
+
+                <section class="config-section">
+
+                    <h2 class="config-section-title">
+                        INFORMAÇÕES PESSOAIS
+                    </h2>
+
+                    <div class="config-card personal-card">
+
+                        <div class="photo-row">
+
+                            <div class="photo-info">
+                                <strong>Foto de Perfil</strong>
+
+                                <small>
+                                    JPG, GIF ou PNG. Máx. 5MB.
+                                </small>
+                            </div>
+
+                            <div class="photo-action">
+
+                                {% if perfil_config.photo %}
+                                    <img
+                                        id="profile-preview"
+                                        class="photo-preview"
+                                        src="{{ perfil_config.photo.url }}"
+                                        alt="Foto de perfil"
+                                    >
+                                {% else %}
+                                    <div
+                                        id="profile-placeholder"
+                                        class="photo-placeholder"
+                                    >
+                                        🧑‍🎓
+                                    </div>
+                                {% endif %}
+
+                                <button
+                                    type="button"
+                                    class="photo-button"
+                                    id="change-photo"
+                                >
+                                    Alterar foto
+                                </button>
+
+                                {{ form.photo }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="field-row">
+
+                            <div class="field-description">
+                                <label for="{{ form.nome_completo.id_for_label }}">
+                                    Nome completo
+                                </label>
+
+                                <small>
+                                    Será exibido em seu perfil público.
+                                </small>
+                            </div>
+
+                            <div>
+                                {{ form.nome_completo }}
+
+                                {% for error in form.nome_completo.errors %}
+                                    <div class="field-error">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+
+
+                        <div class="field-row">
+
+                            <div class="field-description">
+                                <label for="{{ form.display_name.id_for_label }}">
+                                    Nome de exibição
+                                </label>
+
+                                <small>
+                                    Será exibido em seu perfil público.
+                                </small>
+                            </div>
+
+                            <div>
+                                {{ form.display_name }}
+
+                                {% for error in form.display_name.errors %}
+                                    <div class="field-error">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+
+
+                        <div class="field-row">
+
+                            <div class="field-description">
+                                <label for="{{ form.email.id_for_label }}">
+                                    Email
+                                </label>
+
+                                <small>
+                                    Será exibido em seu perfil público.
+                                </small>
+                            </div>
+
+                            <div>
+                                {{ form.email }}
+
+                                {% for error in form.email.errors %}
+                                    <div class="field-error">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+
+
+                        <div class="field-row bio-row">
+
+                            <div class="field-description">
+                                <label for="{{ form.bio.id_for_label }}">
+                                    Bio
+                                </label>
+
+                                <small>
+                                    Breve descrição sobre você. Máx. 160 caracteres.
+                                </small>
+                            </div>
+
+                            <div>
+                                {{ form.bio }}
+
+                                {% for error in form.bio.errors %}
+                                    <div class="field-error">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <section class="config-section">
+
+                    <h2 class="config-section-title">
+                        PREFERÊNCIAS
+                    </h2>
+
+                    <div class="config-card preferences-card">
+
+                        <div class="preference-row">
+
+                            <div class="preference-label">
+                                <strong>Idioma</strong>
+                                <small>
+                                    Idioma da interface do produto.
+                                </small>
+                            </div>
+
+                            {{ form.language }}
+
+                        </div>
+
+
+                        <div class="preference-row">
+
+                            <div class="preference-label">
+                                <strong>Fuso horário</strong>
+                                <small>
+                                    Usado para datas e lembretes.
+                                </small>
+                            </div>
+
+                            {{ form.timezone }}
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- COLUNA DIREITA -->
+
+            <div class="config-column">
+
+                <section class="config-section">
+
+                    <h2 class="config-section-title">
+                        CONTA
+                    </h2>
+
+                    <div class="config-card account-card">
+
+                        <div class="account-row">
+
+                            <strong>
+                                Autenticação de dois fatores
+                            </strong>
+
+                            <small>
+                                Adicione uma camada extra de segurança à sua conta.
+                            </small>
+
+                        </div>
+
+
+                        <div class="account-row">
+
+                            <strong>
+                                Sessões ativas
+                            </strong>
+
+                            <small>
+                                Dispositivos com acesso à sua conta
+                            </small>
+
+                            <button
+                                type="button"
+                                class="account-link"
+                                id="open-sessions"
+                            >
+                                Ver sessões
+                            </button>
+
+                        </div>
+
+
+                        <div class="account-row">
+
+                            <strong>
+                                Excluir conta
+                            </strong>
+
+                            <small>
+                                Ação permanente. Todos os dados serão apagados.
+                            </small>
+
+                            <button
+                                type="button"
+                                class="delete-button"
+                                id="delete-account"
+                            >
+                                Excluir minha conta
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <section class="config-section">
+
+                    <h2 class="config-section-title">
+                        ACESSIBILIDADE
+                    </h2>
+
+                    <div class="config-card accessibility-card">
+
+                        <div class="access-row">
+
+                            <div class="access-label">
+                                <strong>Tema</strong>
+                                <small>
+                                    Aparência da interface.
+                                </small>
+                            </div>
+
+                            <div class="choice-group">
+
+                                <div class="choice">
+                                    <input
+                                        type="radio"
+                                        name="theme"
+                                        id="theme-light"
+                                        value="light"
+                                        {% if perfil_config.theme == 'light' %}
+                                            checked
+                                        {% endif %}
+                                    >
+                                    <label for="theme-light">
+                                        Claro
+                                    </label>
+                                </div>
+
+                                <div class="choice">
+                                    <input
+                                        type="radio"
+                                        name="theme"
+                                        id="theme-dark"
+                                        value="dark"
+                                        {% if perfil_config.theme == 'dark' %}
+                                            checked
+                                        {% endif %}
+                                    >
+                                    <label for="theme-dark">
+                                        Escuro
+                                    </label>
+                                </div>
+
+                                <div class="choice">
+                                    <input
+                                        type="radio"
+                                        name="theme"
+                                        id="theme-system"
+                                        value="system"
+                                        {% if perfil_config.theme == 'system' %}
+                                            checked
+                                        {% endif %}
+                                    >
+                                    <label for="theme-system">
+                                        Sistema
+                                    </label>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="access-row">
+
+    <div class="access-label">
+        <strong>Visual</strong>
+        <small>
+            Tamanho do texto
+        </small>
+    </div>
+
+   <div class="font-choice">
+
+    <label class="font-option">
+        <input
+            type="radio"
+            name="font_size"
+            value="xxsmall"
+            {% if perfil_config.font_size == 'xxsmall' %}
+                checked
+            {% endif %}
+        >
+        <span class="font-xxsmall">A--</span>
+    </label>
+
+
+    <label class="font-option">
+        <input
+            type="radio"
+            name="font_size"
+            value="xsmall"
+            {% if perfil_config.font_size == 'xsmall' %}
+                checked
+            {% endif %}
+        >
+        <span class="font-xsmall">A-</span>
+    </label>
+
+
+    <label class="font-option">
+        <input
+            type="radio"
+            name="font_size"
+            value="small"
+            {% if perfil_config.font_size == 'small' %}
+                checked
+            {% endif %}
+        >
+        <span class="font-small">Pequeno</span>
+    </label>
+
+
+    <label class="font-option">
+        <input
+            type="radio"
+            name="font_size"
+            value="normal"
+            {% if perfil_config.font_size == 'normal' %}
+                checked
+            {% endif %}
+        >
+        <span class="font-normal">Padrão</span>
+    </label>
+
+
+    <label class="font-option">
+        <input
+            type="radio"
+            name="font_size"
+            value="large"
+            {% if perfil_config.font_size == 'large' %}
+                checked
+            {% endif %}
+        >
+        <span class="font-large">A+</span>
+    </label>
+
+
+    <label class="font-option">
+        <input
+            type="radio"
+            name="font_size"
+            value="xlarge"
+            {% if perfil_config.font_size == 'xlarge' %}
+                checked
+            {% endif %}
+        >
+        <span class="font-xlarge">Grande</span>
+    </label>
+
+
+    <label class="font-option">
+        <input
+            type="radio"
+            name="font_size"
+            value="xxlarge"
+            {% if perfil_config.font_size == 'xxlarge' %}
+                checked
+            {% endif %}
+        >
+        <span class="font-xxlarge">A++</span>
+    </label>
+
+
+    <label class="font-option">
+        <input
+            type="radio"
+            name="font_size"
+            value="xxxlarge"
+            {% if perfil_config.font_size == 'xxxlarge' %}
+                checked
+            {% endif %}
+        >
+        <span class="font-xxxlarge">A+++</span>
+    </label>
+
+</div>
+
+</div>
+
+                        <div class="access-row">
+
+                            <div class="access-label">
+                                <strong>Contraste</strong>
+                            </div>
+
+                            <div class="contrast-choice">
+
+                                <label class="radio-choice">
+                                    <input
+                                        type="radio"
+                                        name="contrast"
+                                        value="normal"
+                                        {% if perfil_config.contrast == 'normal' %}
+                                            checked
+                                        {% endif %}
+                                    >
+                                    Padrão
+                                </label>
+
+                                <label class="radio-choice">
+                                    <input
+                                        type="radio"
+                                        name="contrast"
+                                        value="high"
+                                        {% if perfil_config.contrast == 'high' %}
+                                            checked
+                                        {% endif %}
+                                    >
+                                    Alto contraste
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <div class="save-area">
+
+                    <button
+                        type="submit"
+                        class="save-button"
+                    >
+                        Salvar Alterações
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- MODAL DE SESSÕES -->
+
+<div
+    class="config-session-modal"
+    id="session-modal"
+    aria-hidden="true"
+>
+
+    <div class="config-session-box">
+
+        <button
+            type="button"
+            class="config-modal-close"
+            id="close-sessions"
+        >
+            ×
+        </button>
+
+        <h2>Sessões ativas</h2>
+
+        {% if sessoes %}
+
+            {% for sessao in sessoes %}
+
+                <div class="config-session">
+
+                    <div class="config-session-info">
+
+                        <strong>
+                            {% if sessao.current %}
+                                Sessão atual
+                            {% else %}
+                                Outro dispositivo
+                            {% endif %}
+                        </strong>
+
+                        Expira em
+                        {{ sessao.expires|date:"d/m/Y H:i" }}
+
+                    </div>
+
+                    {% if not sessao.current %}
+
+                        <form
+                            method="post"
+                            action="{% url 'encerrar_sessao' %}"
+                        >
+                            {% csrf_token %}
+
+                            <input
+                                type="hidden"
+                                name="session_key"
+                                value="{{ sessao.key }}"
+                            >
+
+                            <button type="submit">
+                                Encerrar
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                Nenhuma sessão ativa encontrada.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- FORMULÁRIO DE EXCLUSÃO -->
+
+<form
+    method="post"
+    action="{% url 'excluir_conta' %}"
+    id="delete-account-form"
+    style="display:none;"
+>
+    {% csrf_token %}
+</form>
+
+
+<script>
+
+(function () {
+
+    const page = document.querySelector('.config-page');
+
+    if (!page) {
+        return;
+    }
+
+
+    /*
+     * FOTO DE PERFIL
+     */
+
+    const photoInput = document.getElementById('{{ form.photo.id_for_label }}');
+    const changePhoto = document.getElementById('change-photo');
+
+    if (photoInput && changePhoto) {
+
+        changePhoto.addEventListener('click', function () {
+            photoInput.click();
+        });
+
+        photoInput.addEventListener('change', function () {
+
+            const file = this.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+
+                alert('A foto deve ter no máximo 5 MB.');
+
+                this.value = '';
+
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+
+                let preview =
+                    document.getElementById('profile-preview');
+
+                const placeholder =
+                    document.getElementById('profile-placeholder');
+
+                if (!preview) {
+
+                    preview = document.createElement('img');
+
+                    preview.id = 'profile-preview';
+                    preview.className = 'photo-preview';
+                    preview.alt = 'Foto de perfil';
+
+                    if (placeholder) {
+                        placeholder.replaceWith(preview);
+                    }
+                }
+
+                preview.src = event.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+
+    /*
+     * ACESSIBILIDADE EM TEMPO REAL
+     */
+
+    function applyAccessibility() {
+
+        const theme =
+            document.querySelector(
+                'input[name="theme"]:checked'
+            )?.value || 'light';
+
+        const font =
+            document.querySelector(
+                'input[name="font_size"]:checked'
+            )?.value || 'normal';
+
+        const contrast =
+            document.querySelector(
+                'input[name="contrast"]:checked'
+            )?.value || 'normal';
+
+
+       document.documentElement.dataset.theme = theme;
+       document.documentElement.dataset.fontSize = font;
+       document.documentElement.dataset.contrast = contrast;
+
+
+        if (theme === 'dark') {
+            document.body.style.background = '#121212';
+        } else if (theme === 'system') {
+
+            const dark =
+                window.matchMedia(
+                    '(prefers-color-scheme: dark)'
+                ).matches;
+
+            document.body.style.background =
+                dark ? '#121212' : '#fff';
+
+        } else {
+            document.body.style.background = '#fff';
+        }
+    }
+
+
+    document
+        .querySelectorAll(
+            'input[name="theme"], input[name="font_size"], input[name="contrast"]'
+        )
+        .forEach(function (input) {
+
+            input.addEventListener(
+                'change',
+                applyAccessibility
+            );
+
+        });
+
+
+    applyAccessibility();
+
+
+    /*
+     * MENU DO USUÁRIO
+     */
+
+    const accountMenu =
+        document.querySelector('.config-page .account-menu');
+
+    if (accountMenu) {
+
+        accountMenu.addEventListener('click', function (event) {
+
+            event.stopPropagation();
+
+            let dropdown =
+                document.querySelector(
+                    '.config-account-dropdown'
+                );
+
+            if (dropdown) {
+
+                dropdown.remove();
+
+                return;
+            }
+
+
+            dropdown =
+                document.createElement('div');
+
+            dropdown.className =
+                'config-account-dropdown';
+
+
+            dropdown.innerHTML = `
+                <a href="{% url 'perfil' %}">
+                    Perfil
+                </a>
+
+                <a href="{% url 'configuracoes' %}">
+                    Configurações
+                </a>
+
+                <button type="button" id="config-logout-button">
+                    Sair
+                </button>
+            `;
+
+
+            accountMenu.appendChild(dropdown);
+
+
+            const logoutButton =
+                dropdown.querySelector(
+                    '#config-logout-button'
+                );
+
+            if (logoutButton) {
+
+                logoutButton.addEventListener(
+                    'click',
+                    function () {
+
+                        const logoutForm =
+                            document.querySelector(
+                                '.logout-form'
+                            );
+
+                        if (logoutForm) {
+                            logoutForm.submit();
+                        }
+
+                    }
+                );
+
+            }
+
+        });
+
+        document.addEventListener('click', function () {
+
+            const dropdown =
+                document.querySelector(
+                    '.config-account-dropdown'
+                );
+
+            if (dropdown) {
+                dropdown.remove();
+            }
+
+        });
+
+    }
+
+
+    /*
+     * SESSÕES
+     */
+
+    const sessionModal =
+        document.getElementById('session-modal');
+
+    const openSessions =
+        document.getElementById('open-sessions');
+
+    const closeSessions =
+        document.getElementById('close-sessions');
+
+
+    if (openSessions && sessionModal) {
+
+        openSessions.addEventListener(
+            'click',
+            function () {
+
+                sessionModal.classList.add('active');
+
+                sessionModal.setAttribute(
+                    'aria-hidden',
+                    'false'
+                );
+
+            }
+        );
+
+    }
+
+
+    if (closeSessions && sessionModal) {
+
+        closeSessions.addEventListener(
+            'click',
+            function () {
+
+                sessionModal.classList.remove('active');
+
+                sessionModal.setAttribute(
+                    'aria-hidden',
+                    'true'
+                );
+
+            }
+        );
+
+    }
+
+
+    if (sessionModal) {
+
+        sessionModal.addEventListener(
+            'click',
+            function (event) {
+
+                if (event.target === sessionModal) {
+
+                    sessionModal.classList.remove(
+                        'active'
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /*
+     * EXCLUSÃO DA CONTA
+     */
+
+    const deleteButton =
+        document.getElementById('delete-account');
+
+    const deleteForm =
+        document.getElementById('delete-account-form');
+
+
+    if (deleteButton && deleteForm) {
+
+        deleteButton.addEventListener(
+            'click',
+            function () {
+
+                const confirmation =
+                    confirm(
+                        'Tem certeza que deseja excluir sua conta? Esta ação é permanente e todos os seus dados serão apagados.'
+                    );
+
+                if (confirmation) {
+                    deleteForm.submit();
+                }
+
+            }
+        );
+
+    }
+
+})();
+
+</script>
+
+{% endblock %}
