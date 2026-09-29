@@ -5,7 +5,22 @@
   <nav class="splash-nav" aria-label="Acesso à conta">
     {% if user.is_authenticated %}<a href="{% url 'listar_bibliotecas' %}">Explorar</a>{% else %}<a href="{% url 'login' %}">Entrar</a><a href="{% url 'cadastro' %}">Cadastre-se</a>{% endif %}
   </nav>
-  <div class="splash-brand"><img src="{% static 'css/logo_edumap.png' %}" alt="EduMap — Pontos de Estudo em Brasília"><span class="loading-ring" aria-hidden="true"></span></div>
+  <div class="splash-brand">
+    <img
+        src="{% static 'css/logo_edumap.png' %}"
+        alt="EduMap — Pontos de Estudo em Brasília"
+    >
+
+    <div class="book-loader" role="img" aria-label="Livro com páginas virando">
+        <span class="book-cover book-cover-left"></span>
+        <span class="book-cover book-cover-right"></span>
+        <span class="book-spine"></span>
+
+        <span class="book-page page-one"></span>
+        <span class="book-page page-two"></span>
+        <span class="book-page page-three"></span>
+    </div>
+</div>
   <p class="copyright">ⓒ 2026 EDUMAP — todos os direitos reservados</p>
 </main>
 {% endblock %}

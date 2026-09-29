@@ -1,24 +1,42 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .forms import BibliotecaForm
+from .forms import BibliotecaForm, CadastroForm
 from .models import Biblioteca
 
 def cadastro(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+    if request.user.is_authenticated:
+        return redirect("listar_bibliotecas")
+
+    if request.method == "POST":
+        dados = request.POST.copy()
+
+        # O e-mail também será usado internamente como nome de usuário.
+        email = dados.get("email", "").strip().lower()
+        dados["username"] = email
+
+        form = CadastroForm(dados)
+
         if form.is_valid():
             form.save()
-            messages.success(request, 'Cadastro realizado com Sucesso! Faça seu login.')
-            return redirect('login')
+
+            messages.success(
+                request,
+                "Cadastro realizado com sucesso! Agora faça seu login.",
+            )
+
+            return redirect("login")
     else:
-        form = UserCreationForm()
-    form.fields['username'].widget.attrs.update({'placeholder': 'Escolha um nome de usuário', 'autocomplete': 'username'})
-    form.fields['password1'].widget.attrs.update({'placeholder': 'Crie uma senha', 'autocomplete': 'new-password'})
-    form.fields['password2'].widget.attrs.update({'placeholder': 'Repita sua senha', 'autocomplete': 'new-password'})
-    return render(request, 'registro.html', {'form': form})
+        form = CadastroForm()
+
+    return render(
+        request,
+        "registro.html",
+        {
+            "form": form,
+        },
+    )
 
 def home(request):
     return render(request, 'home.html')
