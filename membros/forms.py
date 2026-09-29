@@ -100,6 +100,8 @@ class BibliotecaForm(forms.ModelForm):
             "nome",
             "regiao_administrativa",
             "endereco",
+            "horario_funcionamento",
+            "link_mapa",
             "descricao",
             "imagem",
             "possui_internet",
@@ -112,12 +114,24 @@ class BibliotecaForm(forms.ModelForm):
                     "placeholder": "Descreva o espaço e sua estrutura",
                 }
             ),
+            "horario_funcionamento": forms.TextInput(
+                attrs={
+                    "placeholder": "Exemplo: Segunda a sexta, das 8h às 22h",
+                }
+            ),
+            "link_mapa": forms.URLInput(
+                attrs={
+                    "placeholder": "Cole o link do Google Maps",
+                }
+            ),
         }
 
         labels = {
             "nome": "Nome da Biblioteca",
             "regiao_administrativa": "Região Administrativa",
             "endereco": "Endereço",
+            "horario_funcionamento": "Horário de Funcionamento",
+            "link_mapa": "Localização no Google Maps",
             "descricao": "Descrição",
             "imagem": "Foto do Local",
             "possui_internet": "Possui acesso à internet?",
